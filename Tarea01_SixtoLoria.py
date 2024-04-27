@@ -77,9 +77,34 @@ def validar_decision(Mensaje):
             print("ERROR:, La opcion seleccionada es invalida")
             
             
-            
-            
 # =================================================================
 #                    Programa Principal
 # =================================================================
 
+# Ciclo de repeticion
+Repetir = True
+# Ciclo principal
+while Repetir:
+    # Borrando pantalla
+    Borrar_pantalla()
+    # Mostrando el menu principal
+    print("***************************************************************************************")
+    print("**                                                                                   **")
+    print("**       PROGRAMA QUE RESUELVE UN CIRCUITO MAGNETICO A PARTIR DE PARAMETROS          **")
+    print("**                                                                                   **")
+    print("***************************************************************************************\n")
+
+    print("MENU PRINCIPAL: ")
+    print()
+    print("1) Insertar datos del circuito")
+    print("2) Graficar curva de magnetizacion")
+    print("3) Calcular valores de las corrientes.")
+    print("4) Salir del programa")
+    # Solicitar al usuario que seleccione una opcion
+    Opcion = validar_opcion("Seleccione una opcion: ", (1, 2, 3, 4))
+    # Analizar la opcion sellecionada
+    if Opcion == 1:
+        print("Incresar codigo de la Opcion 1")
+        
+    else:
+        print("Salir")
