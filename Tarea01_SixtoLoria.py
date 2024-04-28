@@ -96,15 +96,38 @@ while Repetir:
 
     print("MENU PRINCIPAL: ")
     print()
-    print("1) Insertar datos del circuito")
+    print("1) Insertar parametros del circuito")
     print("2) Graficar curva de magnetizacion")
     print("3) Calcular valores de las corrientes.")
     print("4) Salir del programa")
     # Solicitar al usuario que seleccione una opcion
     Opcion = validar_opcion("Seleccione una opcion: ", (1, 2, 3, 4))
-    # Analizar la opcion sellecionada
-    if Opcion == 1:
-        print("Incresar codigo de la Opcion 1")
+    # Analizar la opcion selecionada
+    if Opcion == 1: #-------------------------------------------------------------
+        Condicion_1 = True
+        while Condicion_1:
+            # Borrando Pantalla
+            Borrar_pantalla()
+            print("***************************************************************************************")
+            print("**                  Ingrese cual valor de corriente conoce                          **")
+            print("***************************************************************************************\n")
+            print("1) Corriente en la bobina 1 (I1)")
+            print("2) Corriente en la bobina 2 (I2)")
+            print("3) Regresar al menu principal")
         
+            # Solicitar al usuario que seleccione una opcion
+            Opcion_I = validar_opcion("Seleccione una opcion: ", (1, 2, 3))
+            # Analizar la opcion selecionada
+
+            if Opcion_I == 1:
+                
+                # Solicitud de datos.
+                Rel_I1 = True       # Para saber que tengo que resolver conociendo I1
+                N1 = leer_numero("Ingrese el valor de vueltas de la bobina 1: ","Entero")
+                N2 = leer_numero("Ingrese el valor de vueltas de la bobina 2: ","Entero")
+                I1 = leer_numero("Ingrese el valor de la corriente 1 (En Ampers): ", "Flotante")
+        
+            
+            
     else:
         print("Salir")
