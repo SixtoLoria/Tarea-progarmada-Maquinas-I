@@ -141,7 +141,7 @@ while Repetir:
             # Restableciendo datos
             Rel_I1,Rel_I2 = False
             print("***************************************************************************************")
-            print("**                  Ingrese cual valor de corriente conoce                          **")
+            print("**                  Ingrese cual valor de corriente conoce                           **")
             print("***************************************************************************************\n")
             print("1) Corriente en la bobina 1 (I1)")
             print("2) Corriente en la bobina 2 (I2)")
@@ -168,7 +168,7 @@ while Repetir:
                 LE = leer_numero("Ingrese el valor de LE: ", "Flotante")
                 Fluejo_Deseado = leer_numero("Ingrese el valor del flujo deseado: ", "Flotante")
                 
-                Ver_para = validar_decision("Desea hacer los parametros ingresados (S/N)? ")
+                Ver_para = validar_decision("Desea ver los parametros ingresados (S/N)? ")
                 
                 if Ver_para == True:
                     print("Imprimir todo")
@@ -177,8 +177,7 @@ while Repetir:
                 else:
                     # Regresando al menu con los datos registrados
                     Condicion_1 = False
-                                                      
-                
+                                                                    
             elif Opcion_I == 2:
                 # Solicitud de datos.
                 Rel_I2 = True       # Para saber que tengo que resolver conociendo I2
@@ -187,12 +186,63 @@ while Repetir:
                 I2 = leer_numero("Ingrese el valor de la corriente 2 (En Ampers): ", "Flotante")  
                 Fa_laminas = leer_apilado("Ingrese el valor del factor de apilado de las lámina (entre 0 y 1): ", "Flotante")
 
+                SL = leer_numero("Ingrese el valor de SL: ", "Flotante")
+                SC = leer_numero("Ingrese el valor de SC: ", "Flotante")
+                A = leer_numero("Ingrese el valor de; area (m^2): ", "Flotante")
+                L1 = leer_numero("Ingrese el valor de L1: ", "Flotante")
+                L2 = leer_numero("Ingrese el valor de L2: ", "Flotante")
+                L3 = leer_numero("Ingrese el valor de L3: ", "Flotante")
+                LE = leer_numero("Ingrese el valor de LE: ", "Flotante")
+                Fluejo_Deseado = leer_numero("Ingrese el valor del flujo deseado: ", "Flotante")
+                
+                Condicion_1 = False
+                input("Regresando al menu principal Presione ENTER para continuar")
             elif Opcion_I == 3:
                 # Regresar al menu principal
                 Condicion_1 = False         
                 
+    elif Opcion == 2:
+        Condicion_2 = True
+        while Condicion_2:
+            # Borrando Pantalla
+            Borrar_pantalla()
+            print("***************************************************************************************")
+            print("**                Ingrese como desearia agregar la parametros de la curva            **")
+            print("***************************************************************************************\n")
+            print("1) Ingresando valores de la curva")
+            print("2) Ingresando la ecuacion de la curva")
+            print("3) Regresar al menu principal")
+        
+            # Solicitar al usuario que seleccione una opcion
+            Opcion_Cur = validar_opcion("Seleccione una opcion: ", (1, 2, 3))
+            # Analizar la opcion selecionada
+            
+            if Opcion_Cur == 1:
+                # Creando lista para guardar los puntos
+                H_poins = [] # eje x
+                B_poins = [] # eje y
                 
+                while True:
+                    try:
+                        H = input("Ingresa un valor de H (o cualquier caracter para finalizar): ")
+                        if not H:
+                            break
+                        H = float(H)
+                        B = float(input("Ingresa el valor de B correspondiente al H ingresado: "))
+                        H_poins.append(H)      
+                        B_poins.append(B)
+                    except ValueError:
+                        print("¡Debes ingresar un valor numérico para x e y!")
+                          
+            elif Opcion_Cur == 2:
+                print("Solicitar ecuacion")
                 
+            elif Opcion_Cur == 3:
+               # Regresar al menu principal
+                Condicion_2 = False       
+            
+            
+                    
     elif Opcion == 4:
         # El usuario desea terminar con el programa.
         Repetir = False
