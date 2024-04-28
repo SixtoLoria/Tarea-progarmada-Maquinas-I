@@ -232,8 +232,32 @@ while Repetir:
                         H_poins.append(H)      
                         B_poins.append(B)
                     except ValueError:
-                        print("¡Debes ingresar un valor numérico para x e y!")
-                          
+                        print("¡Debes ingresar un valor numérico para x e y!")  
+                    # Verificando que tengan la misma longitud
+                    if len(H_poins) != len(B_poins):
+                       print("La cantidad de puntos ingresados para x no coincide con la cantidad de puntos ingresados para y.")     
+                       print("Porfavor vuelva a ingresar los valores")
+                       H_poins = []
+                       B_poins = [] 
+                    else:
+                        
+                        Ver_graf = validar_decision("Desea ver el grafico segun los datos ingresados (S/N)? ")   
+                       
+                        if Ver_graf == True:
+                            # Crear gráfico de dispersión para B vs H
+                            plt.plot(H_poins, B_poins)
+                            # Configurar el gráfico
+                            plt.xlabel('H (A/m)')
+                            plt.ylabel('B (T)')
+                            plt.title('Curva de magnetización')
+                            plt.grid(True)
+                            # Mostrar el gráfico
+                            plt.show()
+                            break
+                        else:
+                            # Salir de la opcion
+                            break
+                       
             elif Opcion_Cur == 2:
                 print("Solicitar ecuacion")
                 
