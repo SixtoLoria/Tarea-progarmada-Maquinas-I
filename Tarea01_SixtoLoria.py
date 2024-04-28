@@ -39,6 +39,36 @@ def leer_numero(Mensaje, Tipo):
     # Retornando el numero validado al programa
     return Numero
 
+
+def leer_apilado(Mensaje, Tipo):
+    """Esta funcion es para recibir numeros de apilado de laminado y validarlo"""
+    while True:
+        # Solicitando un entero del teclado
+        Numero =  input(Mensaje)
+        # validacion
+        try:
+            if Tipo == "Entero":
+                #Transformando numero a entero
+                Numero = int(Numero)
+                # Salida del cliclo while
+                return Numero
+            elif Tipo == "Flotante":
+                # Convertir numero a flotante
+                Numero = float(Numero)
+                Ev_lamin = True
+                while Ev_lamin:
+                    if Numero < 0 and Numero > 1:
+                        print("ERROR, dato insertado no esta entre 0 y 1")
+                    else:
+                        Ev_lamin = False
+                        return Numero
+            else:
+                # El usuario no inserto un numero
+                print("ERROR, Estas usando mal la funcion")
+        except ValueError:
+            print("ERROR, dato insertado no es un numero")
+
+
 def validar_opcion(Mensaje, Opciones):
     """Solicitarle al usuario que seleccione una opicion valida"""
     # Ciclo de validacion
@@ -124,16 +154,19 @@ while Repetir:
             if Opcion_I == 1: 
                 # Solicitud de datos.
                 Rel_I1 = True       # Para saber que tengo que resolver conociendo I1
-                N1 = leer_numero("Ingrese el valor de vueltas de la bobina 1: ","Entero")
-                N2 = leer_numero("Ingrese el valor de vueltas de la bobina 2: ","Entero")
+                N1 = leer_numero("Ingrese el valor de vueltas de la bobina 1: ", "Entero")
+                N2 = leer_numero("Ingrese el valor de vueltas de la bobina 2: ", "Entero")
                 I1 = leer_numero("Ingrese el valor de la corriente 1 (En Ampers): ", "Flotante")
+                
+                
         
             elif Opcion_I == 2:
                 # Solicitud de datos.
                 Rel_I2 = True       # Para saber que tengo que resolver conociendo I2
                 N1 = leer_numero("Ingrese el valor de vueltas de la bobina 1: ","Entero")
                 N2 = leer_numero("Ingrese el valor de vueltas de la bobina 2: ","Entero")
-                I2 = leer_numero("Ingrese el valor de la corriente 2 (En Ampers): ", "Flotante")
+                I2 = leer_numero("Ingrese el valor de la corriente 2 (En Ampers): ", "Flotante")  
+                Fa_laminas = leer_apilado("Ingrese el valor del factor de apilado de las lámina (entre 0 y 1): ", "Flotante")
 
             elif Opcion_I == 3:
                 # Regresar al menu principal
