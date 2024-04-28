@@ -222,42 +222,38 @@ while Repetir:
                 H_poins = [] # eje x
                 B_poins = [] # eje y
                 
-                while True:
-                    try:
-                        H = input("Ingresa un valor de H (o cualquier caracter para finalizar): ")
-                        if not H:
-                            break
-                        H = float(H)
-                        B = float(input("Ingresa el valor de B correspondiente al H ingresado: "))
+                Agregar_pts = True
+                while Agregar_pts:
+                        H = leer_numero("Ingresa un valor de H : ", "Flotante")
+                        B = leer_numero("Ingresa el valor de B correspondiente al H ingresado: ", "Flotante")
                         H_poins.append(H)      
                         B_poins.append(B)
-                    except ValueError:
-                        print("¡Debes ingresar un valor numérico para x e y!")  
-                    # Verificando que tengan la misma longitud
-                    if len(H_poins) != len(B_poins):
-                       print("La cantidad de puntos ingresados para x no coincide con la cantidad de puntos ingresados para y.")     
-                       print("Porfavor vuelva a ingresar los valores")
-                       H_poins = []
-                       B_poins = [] 
-                    else:
+                        Agregar_pts = validar_decision("Desea agregar mas valores(S/N)? ")                    
+                                 
+                # Verificando que tengan la misma longitud
+                if len(H_poins) != len(B_poins):
+                    print("La cantidad de puntos ingresados para x no coincide con la cantidad de puntos ingresados para y.")     
+                    print("Porfavor vuelva a ingresar los valores")
+                    H_poins = []
+                    B_poins = [] 
+                else:                 
+                    Ver_graf = validar_decision("Desea ver el grafico segun los datos ingresados (S/N)? ")   
+                    
+                    if Ver_graf == True:
+                        # Crear gráfico de dispersión para B vs H
+                        plt.plot(H_poins, B_poins)
+                        # Configurar el gráfico
+                        plt.xlabel('H (A/m)')
+                        plt.ylabel('B (T)')
+                        plt.title('Curva de magnetización')
+                        plt.grid(True)
+                        # Mostrar el gráfico
+                        plt.show()
                         
-                        Ver_graf = validar_decision("Desea ver el grafico segun los datos ingresados (S/N)? ")   
-                       
-                        if Ver_graf == True:
-                            # Crear gráfico de dispersión para B vs H
-                            plt.plot(H_poins, B_poins)
-                            # Configurar el gráfico
-                            plt.xlabel('H (A/m)')
-                            plt.ylabel('B (T)')
-                            plt.title('Curva de magnetización')
-                            plt.grid(True)
-                            # Mostrar el gráfico
-                            plt.show()
-                            break
-                        else:
-                            # Salir de la opcion
-                            break
-                       
+                    else:
+                        # Salir de la opcion
+                        print("Regresando")
+                        
             elif Opcion_Cur == 2:
                 print("Solicitar ecuacion")
                 
