@@ -127,7 +127,7 @@ while Repetir:
     print("MENU PRINCIPAL: ")
     print()
     print("1) Insertar parametros del circuito")
-    print("2) Graficar curva de magnetizacion")
+    print("2) Ingresar y graficar curva de magnetizacion")
     print("3) Calcular valores de las corrientes.")
     print("4) Salir del programa")
     # Solicitar al usuario que seleccione una opcion
@@ -157,9 +157,18 @@ while Repetir:
                 N1 = leer_numero("Ingrese el valor de vueltas de la bobina 1: ", "Entero")
                 N2 = leer_numero("Ingrese el valor de vueltas de la bobina 2: ", "Entero")
                 I1 = leer_numero("Ingrese el valor de la corriente 1 (En Ampers): ", "Flotante")
+                Fa_laminas = leer_apilado("Ingrese el valor del factor de apilado de las lámina (entre 0 y 1): ", "Flotante")
+                
+                SL = leer_numero("Ingrese el valor de SL: ", "Flotante")
+                SC = leer_numero("Ingrese el valor de SC: ", "Flotante")
+                A = leer_numero("Ingrese el valor de; area (m^2): ", "Flotante")
+                L1 = leer_numero("Ingrese el valor de L1: ", "Flotante")
+                L2 = leer_numero("Ingrese el valor de L2: ", "Flotante")
+                L3 = leer_numero("Ingrese el valor de L3: ", "Flotante")
+                LE = leer_numero("Ingrese el valor de LE: ", "Flotante")
+                Fluejo_Deseado = leer_numero("Ingrese el valor del flujo deseado: ", "Flotante")
                 
                 
-        
             elif Opcion_I == 2:
                 # Solicitud de datos.
                 Rel_I2 = True       # Para saber que tengo que resolver conociendo I2
