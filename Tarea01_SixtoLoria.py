@@ -108,6 +108,8 @@ while Repetir:
         while Condicion_1:
             # Borrando Pantalla
             Borrar_pantalla()
+            # Restableciendo datos
+            Rel_I1,Rel_I2 = False
             print("***************************************************************************************")
             print("**                  Ingrese cual valor de corriente conoce                          **")
             print("***************************************************************************************\n")
@@ -119,15 +121,31 @@ while Repetir:
             Opcion_I = validar_opcion("Seleccione una opcion: ", (1, 2, 3))
             # Analizar la opcion selecionada
 
-            if Opcion_I == 1:
-                
+            if Opcion_I == 1: 
                 # Solicitud de datos.
                 Rel_I1 = True       # Para saber que tengo que resolver conociendo I1
                 N1 = leer_numero("Ingrese el valor de vueltas de la bobina 1: ","Entero")
                 N2 = leer_numero("Ingrese el valor de vueltas de la bobina 2: ","Entero")
                 I1 = leer_numero("Ingrese el valor de la corriente 1 (En Ampers): ", "Flotante")
         
-            
-            
-    else:
-        print("Salir")
+            elif Opcion_I == 2:
+                # Solicitud de datos.
+                Rel_I2 = True       # Para saber que tengo que resolver conociendo I2
+                N1 = leer_numero("Ingrese el valor de vueltas de la bobina 1: ","Entero")
+                N2 = leer_numero("Ingrese el valor de vueltas de la bobina 2: ","Entero")
+                I2 = leer_numero("Ingrese el valor de la corriente 2 (En Ampers): ", "Flotante")
+
+            elif Opcion_I == 3:
+                # Regresar al menu principal
+                Condicion_1 = False         
+                
+                
+                
+    elif Opcion == 4:
+        # El usuario desea terminar con el programa.
+        Repetir = False
+        
+# Mensaje de salida.
+print("Usted esta saliendo de la aplicacion...")
+# Input para impedir cierre instantaneo de la aplicacion.
+input("Presione ENTER para salir")
