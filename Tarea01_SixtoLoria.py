@@ -168,6 +168,16 @@ while Repetir:
                 LE = leer_numero("Ingrese el valor de LE: ", "Flotante")
                 Fluejo_Deseado = leer_numero("Ingrese el valor del flujo deseado: ", "Flotante")
                 
+                Ver_para = validar_decision("Desea hacer los parametros ingresados (S/N)? ")
+                
+                if Ver_para == True:
+                    print("Imprimir todo")
+                    Condicion_1 = False
+                    input("Presione ENTER para regresar")
+                else:
+                    # Regresando al menu con los datos registrados
+                    Condicion_1 = False
+                                                      
                 
             elif Opcion_I == 2:
                 # Solicitud de datos.
