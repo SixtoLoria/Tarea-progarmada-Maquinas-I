@@ -7,6 +7,8 @@
 # Librerias.
 import pandas as pd
 import matplotlib.pyplot as plt
+from scipy.interpolate import interp1d
+import numpy as np
 import os
 
 # BORRAR PANTALLA.f
@@ -159,24 +161,25 @@ while Repetir:
                 I1 = leer_numero("Ingrese el valor de la corriente 1 (En Ampers): ", "Flotante")
                 Fa_laminas = leer_apilado("Ingrese el valor del factor de apilado de las lámina (entre 0 y 1): ", "Flotante")
                 
-                SL = leer_numero("Ingrese el valor de SL: ", "Flotante")
-                SC = leer_numero("Ingrese el valor de SC: ", "Flotante")
+                SL = leer_numero("Ingrese el valor de SL(m^2): ", "Flotante")
+                SC = leer_numero("Ingrese el valor de SC(m^2): ", "Flotante")
                 A = leer_numero("Ingrese el valor de; area (m^2): ", "Flotante")
-                L1 = leer_numero("Ingrese el valor de L1: ", "Flotante")
-                L2 = leer_numero("Ingrese el valor de L2: ", "Flotante")
-                L3 = leer_numero("Ingrese el valor de L3: ", "Flotante")
-                LE = leer_numero("Ingrese el valor de LE: ", "Flotante")
-                Fluejo_Deseado = leer_numero("Ingrese el valor del flujo deseado: ", "Flotante")
+                L1 = leer_numero("Ingrese el valor de L1(m): ", "Flotante")
+                L2 = leer_numero("Ingrese el valor de L2(m): ", "Flotante")
+                L3 = leer_numero("Ingrese el valor de L3(m): ", "Flotante")
+                LE = leer_numero("Ingrese el valor de LE(m): ", "Flotante")
+                Flujo_Deseado = leer_numero("Ingrese el valor del flujo deseado: ", "Flotante")
                 
-                Ver_para = validar_decision("Desea ver los parametros ingresados (S/N)? ")
+                Condicion_1 = False
+                input("Regresando al menu principal Presione ENTER para continuar")
+                #Ver_para = validar_decision("Desea ver los parametros ingresados (S/N)? ")
                 
-                if Ver_para == True:
-                    print("Imprimir todo")
-                    Condicion_1 = False
-                    input("Presione ENTER para regresar")
-                else:
+                #if Ver_para == True:
+                    #print("Imprimir todo")
+                    #input("Presione ENTER para regresar")
+                #else:
                     # Regresando al menu con los datos registrados
-                    Condicion_1 = False
+                    #Condicion_1 = False
                                                                     
             elif Opcion_I == 2:
                 # Solicitud de datos.
@@ -186,14 +189,14 @@ while Repetir:
                 I2 = leer_numero("Ingrese el valor de la corriente 2 (En Ampers): ", "Flotante")  
                 Fa_laminas = leer_apilado("Ingrese el valor del factor de apilado de las lámina (entre 0 y 1): ", "Flotante")
 
-                SL = leer_numero("Ingrese el valor de SL: ", "Flotante")
-                SC = leer_numero("Ingrese el valor de SC: ", "Flotante")
+                SL = leer_numero("Ingrese el valor de SL(m^2): ", "Flotante")
+                SC = leer_numero("Ingrese el valor de SC(m^2): ", "Flotante")
                 A = leer_numero("Ingrese el valor de; area (m^2): ", "Flotante")
-                L1 = leer_numero("Ingrese el valor de L1: ", "Flotante")
-                L2 = leer_numero("Ingrese el valor de L2: ", "Flotante")
-                L3 = leer_numero("Ingrese el valor de L3: ", "Flotante")
-                LE = leer_numero("Ingrese el valor de LE: ", "Flotante")
-                Fluejo_Deseado = leer_numero("Ingrese el valor del flujo deseado: ", "Flotante")
+                L1 = leer_numero("Ingrese el valor de L1(m): ", "Flotante")
+                L2 = leer_numero("Ingrese el valor de L2(m): ", "Flotante")
+                L3 = leer_numero("Ingrese el valor de L3(m): ", "Flotante")
+                LE = leer_numero("Ingrese el valor de LE(m): ", "Flotante")
+                Flujo_Deseado = leer_numero("Ingrese el valor del flujo deseado: ", "Flotante")
                 
                 Condicion_1 = False
                 input("Regresando al menu principal Presione ENTER para continuar")
@@ -207,12 +210,12 @@ while Repetir:
             # Borrando Pantalla
             Borrar_pantalla()
             print("***************************************************************************************")
-            print("**                Ingrese como desearia agregar la parametros de la curva            **")
+            print("**                Ingrese como desea agregar la parametros de la curva               **")
             print("***************************************************************************************\n")
             print("1) Ingresando valores de la curva")
             print("2) Ingresando la ecuacion de la curva")
             print("3) Regresar al menu principal")
-        
+
             # Solicitar al usuario que seleccione una opcion
             Opcion_Cur = validar_opcion("Seleccione una opcion: ", (1, 2, 3))
             # Analizar la opcion selecionada
@@ -229,14 +232,16 @@ while Repetir:
                         H_poins.append(H)      
                         B_poins.append(B)
                         Agregar_pts = validar_decision("Desea agregar mas valores(S/N)? ")                    
-                                 
+                #Creando funcion para interpolacion de datos
+                f_curva = interp1d(H_poins, B_poins)                 
                 # Verificando que tengan la misma longitud
                 if len(H_poins) != len(B_poins):
                     print("La cantidad de puntos ingresados para x no coincide con la cantidad de puntos ingresados para y.")     
                     print("Porfavor vuelva a ingresar los valores")
                     H_poins = []
                     B_poins = [] 
-                else:                 
+                else:
+                    Curva_act = True # Bandera para saber si se ingreso una curva                 
                     Ver_graf = validar_decision("Desea ver el grafico segun los datos ingresados (S/N)? ")   
                     
                     if Ver_graf == True:
@@ -255,13 +260,38 @@ while Repetir:
                         print("Regresando")
                         
             elif Opcion_Cur == 2:
-                print("Solicitar ecuacion")
+                # Solicitando valores de la ecuacion.
+                a_ecua = leer_numero("Ingrese el valor de a (25% del valor maximo de B): ", "Flotante")
+                b_ecua = leer_numero("Ingrese el valor de b (90% del valor maximo de B): ", "Flotante")
+                
+                # planteando ecuacion
+                
                 
             elif Opcion_Cur == 3:
                # Regresar al menu principal
                 Condicion_2 = False       
             
+    elif Opcion == 3:
+        # Parte de calcular y mostrar resultados.
+             
+        if Rel_I1 == True and Curva_act == True:
+            # Calculando valores     
+            B3 = Flujo_Deseado / (SC * Fa_laminas)
+            H3 = f_curva(B3) # Se toma el valor correspondiente a la curva. 
+            L_fe = L3 - LE
+            B_a = Flujo_Deseado / SC
+            H_a = B_a / (4 * np.pi * 10 **(-7)) 
+            F_mmAB = H3 * L_fe + H_a * LE
             
+            # Se usa I1
+            
+            
+        elif Rel_I2 == True and Curva_act == True:
+            print("Resolver para I2")
+
+        else:
+            print("Primero se tienen que ingresar datos")
+        
                     
     elif Opcion == 4:
         # El usuario desea terminar con el programa.
