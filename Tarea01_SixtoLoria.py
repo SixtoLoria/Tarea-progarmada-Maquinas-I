@@ -8,6 +8,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
+from sympy import symbols, lambdify, sympify
 import numpy as np
 import os
 
@@ -135,7 +136,7 @@ while Repetir:
     print()
     print("1) Insertar parametros del circuito")
     print("2) Ingresar y graficar curva de magnetizacion")
-    print("3) Calcular valores de las corrientes.")
+    print("3) Calcular valores de la corriente y flujos laterales.")
     print("4) Salir del programa")
     # Solicitar al usuario que seleccione una opcion
     Opcion = validar_opcion("Seleccione una opcion: ", (1, 2, 3, 4))
@@ -208,7 +209,7 @@ while Repetir:
             # Borrando Pantalla
             Borrar_pantalla()
             print("***************************************************************************************")
-            print("**                Seleccione como desea agregar la parametros de la curva               **")
+            print("**                Seleccione como desea agregar la parametros de la curva            **")
             print("***************************************************************************************\n")
             print("1) Ingresando valores de la curva")
             print("2) Ingresando la ecuacion de la curva")
@@ -231,13 +232,13 @@ while Repetir:
                         B_poins.append(B)
                         Agregar_pts = validar_decision("Desea agregar mas valores(S/N)? ")                    
                 #Creando funcion para interpolacion de datos
-                f_curva = interp1d(H_poins, B_poins)                 
+                f_curva = interp1d(H_poins, B_poins, kind='linear', fill_value='extrapolate')                 
                 # Verificando que tengan la misma longitud
                 if len(H_poins) != len(B_poins):
                     print("La cantidad de puntos ingresados para x no coincide con la cantidad de puntos ingresados para y.")     
                     print("Porfavor vuelva a ingresar los valores")
-                    #H_poins = []
-                    #B_poins = [] 
+                    H_poins = []
+                    B_poins = [] 
                 else:
                     Curva_act = True # Bandera para saber si se ingreso una curva                 
                     Ver_graf = validar_decision("Desea ver el grafico segun los datos ingresados (S/N)? ")   
@@ -259,12 +260,39 @@ while Repetir:
                         
             elif Opcion_Cur == 2:
                 # Solicitando valores de la ecuacion.
-                a_ecua = leer_numero("Ingrese el valor de a (25% del valor maximo de B): ", "Flotante")
-                b_ecua = leer_numero("Ingrese el valor de b (90% del valor maximo de B): ", "Flotante")
+                Borrar_pantalla()
+                print("***************************************************************************************")
+                print("**                Ingrese la ecuacion de la curva de magnetizacion en forma          **")
+                print("**                de strink, por ejemplo: a * H / (1 + b*H)                          **")
+                print("**                                                                                   **")
+                print("**     Donde: a y b son valores de la curva                                          **")
+                print("***************************************************************************************\n")
+                print()
+                ecuacion = input("Ingrese la ecuación de la curva de magnetización: ")
                 
-                # planteando ecuacion
-                
-                
+                # Convertir la ecuación en una expresión simbólica
+                H = symbols('H')
+                expr = sympify(ecuacion)
+                # Crear una función a partir de la expresión
+                func = lambdify(H, expr, 'numpy')
+                # Generar datos para la gráfica
+                H_vals = np.linspace(0, 10, 100)  # Ejemplo de valores para el eje H
+                B_vals = func(H_vals)  # Calcular los valores correspondientes en M
+
+                # Graficar la curva de magnetización
+                plt.figure()
+                plt.plot(H_vals, B_vals)
+                plt.xlabel('H')
+                plt.ylabel('M')
+                plt.title('Curva de Magnetización')
+                plt.grid(True)
+                plt.show()
+
+                # Devolver los datos de los ejes H y M en arreglos numpy
+                H_poins = np.array(H_vals)
+                B_poins = np.array(B_vals)
+                Curva_act = True # Bandera para saber si se ingreso una curva
+                                  
             elif Opcion_Cur == 3:
                # Regresar al menu principal
                 Condicion_2 = False       
@@ -275,8 +303,8 @@ while Repetir:
         if Rel_I1 == True and Curva_act == True:
             # Calculando valores     
             B3 = Flujo_Deseado / (SC * F_ap)
-            #H3 = f_curva(B3) # Se toma el valor correspondiente a la curva.
-            H3 = np.interp(B3, H_poins, B_poins) 
+            H3 = f_curva(B3) # Se toma el valor correspondiente a la curva.
+            #H3 = np.interp(B3, H_poins, B_poins) 
             L_fe = (L3 - LE)
             B_a = Flujo_Deseado / SC
             H_a = B_a / (4 * np.pi * 10 **(-7)) 
@@ -284,8 +312,8 @@ while Repetir:
             
             # Se usa I1
             H1 = ((N1 * I1) - F_mmAB)/L1
-            #B1 = f_curva(H1) # Se toma el valor correspondiente a la curva.
-            B1 = np.interp(H1, H_poins, B_poins)
+            B1 = f_curva(H1) # Se toma el valor correspondiente a la curva.
+            #B1 = np.interp(H1, H_poins, B_poins)
             # Calculando flujo 1
             Flujo_1 = B1 * SL * F_ap        
             # Calculando flujo 2
@@ -293,8 +321,8 @@ while Repetir:
             
             # Calculando I2
             B2 = Flujo_2/(SL * F_ap)
-            #H2 = f_curva(B2) # Se toma el valor correspondiente a la curva.
-            H2 = np.interp(B2, H_poins, B_poins)
+            H2 = f_curva(B2) # Se toma el valor correspondiente a la curva.
+            #H2 = np.interp(B2, H_poins, B_poins)
             
             I_2 = (H2 * L2 + F_mmAB)/N2 
             
