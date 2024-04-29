@@ -4,11 +4,14 @@
 #       Programa resolverdor de circuito magnetico.
 # =========================================================================================
 
+# NOTA: Es importante tener las librerias instaladas para el correcto funcionamiento.
+# Usar: pip install pandas matplotlib sympy scipy numpy
+
 # Librerias.
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
-from sympy import symbols, lambdify, sympify
+from sympy import symbols, lambdify, sympify, exp
 import numpy as np
 import os
 
@@ -273,6 +276,7 @@ while Repetir:
                 # Convertir la ecuación en una expresión simbólica
                 H = symbols('H')
                 expr = sympify(ecuacion)
+                #expr = exp(H)
                 # Crear una función a partir de la expresión
                 func = lambdify(H, expr, 'numpy')
                 # Generar datos para la gráfica
@@ -282,8 +286,9 @@ while Repetir:
                 # Graficar la curva de magnetización
                 plt.figure()
                 plt.plot(H_vals, B_vals)
+                #plt.yscale('log')  # Escala logarítmica en el eje y
                 plt.xlabel('H')
-                plt.ylabel('M')
+                plt.ylabel('B')
                 plt.title('Curva de Magnetización')
                 plt.grid(True)
                 plt.show()
@@ -292,7 +297,7 @@ while Repetir:
                 H_poins = np.array(H_vals)
                 B_poins = np.array(B_vals)
                 Curva_act = True # Bandera para saber si se ingreso una curva
-                                  
+                f_curva = interp1d(H_poins, B_poins, kind='linear', fill_value='extrapolate')                  
             elif Opcion_Cur == 3:
                # Regresar al menu principal
                 Condicion_2 = False       
@@ -327,13 +332,43 @@ while Repetir:
             I_2 = (H2 * L2 + F_mmAB)/N2 
             
             #Imprimiendo resultados.
-            print(f"El valor del flujo por la columna 1 calculado es: {Flujo_1} Wb")
-            print(f"El valor del flujo por la columna 2 calculado es: {Flujo_2} Wb")
+            print(f"El valor del flujo por la columna 1 calculado es: {Flujo_1:.05} Wb")
+            print(f"El valor del flujo por la columna 2 calculado es: {Flujo_2:.05} Wb")
             print(f"El valor de la corriente en la bobina 2 es: {I_2} A")
             input("Presione Enter para continuar")
             
         elif Rel_I2 == True and Curva_act == True:
-            print("Resolver para I2")
+            # Calculando valores     
+            B3 = Flujo_Deseado / (SC * F_ap)
+            H3 = f_curva(B3) # Se toma el valor correspondiente a la curva.
+            #H3 = np.interp(B3, H_poins, B_poins) 
+            L_fe = (L3 - LE)
+            B_a = Flujo_Deseado / SC
+            H_a = B_a / (4 * np.pi * 10 **(-7)) 
+            F_mmAB = (H3 * L_fe + H_a * LE)
+            
+            # Se usa I2
+            H2 = ((N2 * I2) - F_mmAB)/L2
+            B2 = f_curva(H2) # Se toma el valor correspondiente a la curva.
+            #B1 = np.interp(H1, H_poins, B_poins)
+            # Calculando flujo 2
+            Flujo_2 = B2 * SL * F_ap        
+            # Calculando flujo 1
+            Flujo_1 = Flujo_Deseado - Flujo_2
+            
+            # Calculando I1
+            B1 = Flujo_1/(SL * F_ap)
+            H1 = f_curva(B1) # Se toma el valor correspondiente a la curva.
+            #H2 = np.interp(B2, H_poins, B_poins)
+            
+            I_1 = (H1 * L1 + F_mmAB)/N1 
+            
+            #Imprimiendo resultados.
+            print(f"El valor del flujo por la columna 1 calculado es: {Flujo_1:.05} Wb")
+            print(f"El valor del flujo por la columna 2 calculado es: {Flujo_2:.05} Wb")
+            print(f"El valor de la corriente en la bobina 2 es: {I_1} A")
+            input("Presione Enter para continuar")
+
 
         else:
             input("Primero se tienen que ingresar datos")
