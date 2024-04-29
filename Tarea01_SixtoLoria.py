@@ -188,12 +188,12 @@ while Repetir:
                 Rel_I2 = True       # Para saber que tengo que resolver conociendo I2
                 N1 = leer_numero("Ingrese el valor de vueltas de la bobina 1: ","Entero")
                 N2 = leer_numero("Ingrese el valor de vueltas de la bobina 2: ","Entero")
-                I2 = leer_numero("Ingrese el valor de la corriente 2 (En Amperes): ", "Flotante")  
+                I2 = leer_numero("Ingrese el valor de la corriente en la bobina 2 (En Amperes): ", "Flotante")  
                 F_ap = leer_apilado("Ingrese el valor del factor de apilado de las lámina (entre 0 y 1): ", "Flotante")
 
                 SL = leer_numero("Ingrese el valor de SL(m^2): ", "Flotante")
                 SC = leer_numero("Ingrese el valor de SC(m^2): ", "Flotante")
-                A = leer_numero("Ingrese el valor de; area (m^2): ", "Flotante")
+                A = leer_numero("Ingrese el valor del area (m^2): ", "Flotante")
                 L1 = leer_numero("Ingrese el valor de L1(m): ", "Flotante")
                 L2 = leer_numero("Ingrese el valor de L2(m): ", "Flotante")
                 L3 = leer_numero("Ingrese el valor de L3(m): ", "Flotante")
@@ -280,13 +280,13 @@ while Repetir:
                 # Crear una función a partir de la expresión
                 func = lambdify(H, expr, 'numpy')
                 # Generar datos para la gráfica
-                H_vals = np.linspace(0, 10, 100)  # Ejemplo de valores para el eje H
+                H_vals = np.linspace(0, 5, 100)  # Ejemplo de valores para el eje H
                 B_vals = func(H_vals)  # Calcular los valores correspondientes en M
 
                 # Graficar la curva de magnetización
                 plt.figure()
                 plt.plot(H_vals, B_vals)
-                #plt.yscale('log')  # Escala logarítmica en el eje y
+                plt.yscale('log')  # Escala logarítmica en el eje y
                 plt.xlabel('H')
                 plt.ylabel('B')
                 plt.title('Curva de Magnetización')
@@ -334,14 +334,14 @@ while Repetir:
             #Imprimiendo resultados.
             print(f"El valor del flujo por la columna 1 calculado es: {Flujo_1:.05} Wb")
             print(f"El valor del flujo por la columna 2 calculado es: {Flujo_2:.05} Wb")
-            print(f"El valor de la corriente en la bobina 2 es: {I_2} A")
+            print(f"El valor de la corriente en la bobina 2 es: {I_2:.05} A")
             input("Presione Enter para continuar")
             
         elif Rel_I2 == True and Curva_act == True:
             # Calculando valores     
             B3 = Flujo_Deseado / (SC * F_ap)
-            H3 = f_curva(B3) # Se toma el valor correspondiente a la curva.
-            #H3 = np.interp(B3, H_poins, B_poins) 
+            #H3 = f_curva(B3) # Se toma el valor correspondiente a la curva.
+            H3 = np.interp(B3, H_poins, B_poins) 
             L_fe = (L3 - LE)
             B_a = Flujo_Deseado / SC
             H_a = B_a / (4 * np.pi * 10 **(-7)) 
@@ -349,8 +349,8 @@ while Repetir:
             
             # Se usa I2
             H2 = ((N2 * I2) - F_mmAB)/L2
-            B2 = f_curva(H2) # Se toma el valor correspondiente a la curva.
-            #B1 = np.interp(H1, H_poins, B_poins)
+            #B2 = f_curva(H2) # Se toma el valor correspondiente a la curva.
+            B2 = np.interp(H2, H_poins, B_poins)
             # Calculando flujo 2
             Flujo_2 = B2 * SL * F_ap        
             # Calculando flujo 1
@@ -358,17 +358,16 @@ while Repetir:
             
             # Calculando I1
             B1 = Flujo_1/(SL * F_ap)
-            H1 = f_curva(B1) # Se toma el valor correspondiente a la curva.
-            #H2 = np.interp(B2, H_poins, B_poins)
+            #H1 = f_curva(B1) # Se toma el valor correspondiente a la curva.
+            H1 = np.interp(B1, H_poins, B_poins)
             
             I_1 = (H1 * L1 + F_mmAB)/N1 
             
             #Imprimiendo resultados.
             print(f"El valor del flujo por la columna 1 calculado es: {Flujo_1:.05} Wb")
             print(f"El valor del flujo por la columna 2 calculado es: {Flujo_2:.05} Wb")
-            print(f"El valor de la corriente en la bobina 2 es: {I_1} A")
+            print(f"El valor de la corriente en la bobina 2 es: {I_1:.05} A")
             input("Presione Enter para continuar")
-
 
         else:
             input("Primero se tienen que ingresar datos")
