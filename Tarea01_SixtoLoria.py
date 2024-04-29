@@ -115,6 +115,11 @@ def validar_decision(Mensaje):
 
 # Ciclo de repeticion
 Repetir = True
+# Banderas de ingreso de datos
+Rel_I1 = False
+Rel_I2 = False
+Curva_act = False
+
 # Ciclo principal
 while Repetir:
     # Borrando pantalla
@@ -141,7 +146,8 @@ while Repetir:
             # Borrando Pantalla
             Borrar_pantalla()
             # Restableciendo datos
-            Rel_I1,Rel_I2 = False
+            Rel_I1 = False
+            Rel_I2 = False
             print("***************************************************************************************")
             print("**                  Ingrese cual valor de corriente conoce                           **")
             print("***************************************************************************************\n")
@@ -158,35 +164,27 @@ while Repetir:
                 Rel_I1 = True       # Para saber que tengo que resolver conociendo I1
                 N1 = leer_numero("Ingrese el valor de vueltas de la bobina 1: ", "Entero")
                 N2 = leer_numero("Ingrese el valor de vueltas de la bobina 2: ", "Entero")
-                I1 = leer_numero("Ingrese el valor de la corriente 1 (En Ampers): ", "Flotante")
-                F_ap = leer_apilado("Ingrese el valor del factor de apilado de las lámina (entre 0 y 1): ", "Flotante")
+                I1 = leer_numero("Ingrese el valor de la corriente 1 (En Amperes): ", "Flotante")
+                F_ap = leer_apilado("Ingrese el valor del factor de apilado de las láminas(entre 0 y 1): ", "Flotante")
                 
                 SL = leer_numero("Ingrese el valor de SL(m^2): ", "Flotante")
                 SC = leer_numero("Ingrese el valor de SC(m^2): ", "Flotante")
-                A = leer_numero("Ingrese el valor de; area (m^2): ", "Flotante")
+                A = leer_numero("Ingrese el valor del area (m^2): ", "Flotante")
                 L1 = leer_numero("Ingrese el valor de L1(m): ", "Flotante")
                 L2 = leer_numero("Ingrese el valor de L2(m): ", "Flotante")
                 L3 = leer_numero("Ingrese el valor de L3(m): ", "Flotante")
                 LE = leer_numero("Ingrese el valor de LE(m): ", "Flotante")
-                Flujo_Deseado = leer_numero("Ingrese el valor del flujo deseado: ", "Flotante")
+                Flujo_Deseado = leer_numero("Ingrese el valor del flujo deseado(Wb): ", "Flotante")
                 
                 Condicion_1 = False
                 input("Regresando al menu principal Presione ENTER para continuar")
-                #Ver_para = validar_decision("Desea ver los parametros ingresados (S/N)? ")
-                
-                #if Ver_para == True:
-                    #print("Imprimir todo")
-                    #input("Presione ENTER para regresar")
-                #else:
-                    # Regresando al menu con los datos registrados
-                    #Condicion_1 = False
-                                                                    
+                                                                        
             elif Opcion_I == 2:
                 # Solicitud de datos.
                 Rel_I2 = True       # Para saber que tengo que resolver conociendo I2
                 N1 = leer_numero("Ingrese el valor de vueltas de la bobina 1: ","Entero")
                 N2 = leer_numero("Ingrese el valor de vueltas de la bobina 2: ","Entero")
-                I2 = leer_numero("Ingrese el valor de la corriente 2 (En Ampers): ", "Flotante")  
+                I2 = leer_numero("Ingrese el valor de la corriente 2 (En Amperes): ", "Flotante")  
                 F_ap = leer_apilado("Ingrese el valor del factor de apilado de las lámina (entre 0 y 1): ", "Flotante")
 
                 SL = leer_numero("Ingrese el valor de SL(m^2): ", "Flotante")
@@ -196,7 +194,7 @@ while Repetir:
                 L2 = leer_numero("Ingrese el valor de L2(m): ", "Flotante")
                 L3 = leer_numero("Ingrese el valor de L3(m): ", "Flotante")
                 LE = leer_numero("Ingrese el valor de LE(m): ", "Flotante")
-                Flujo_Deseado = leer_numero("Ingrese el valor del flujo deseado: ", "Flotante")
+                Flujo_Deseado = leer_numero("Ingrese el valor del flujo por el entrehierro deseado(Wb): ", "Flotante")
                 
                 Condicion_1 = False
                 input("Regresando al menu principal Presione ENTER para continuar")
@@ -210,7 +208,7 @@ while Repetir:
             # Borrando Pantalla
             Borrar_pantalla()
             print("***************************************************************************************")
-            print("**                Ingrese como desea agregar la parametros de la curva               **")
+            print("**                Seleccione como desea agregar la parametros de la curva               **")
             print("***************************************************************************************\n")
             print("1) Ingresando valores de la curva")
             print("2) Ingresando la ecuacion de la curva")
@@ -238,8 +236,8 @@ while Repetir:
                 if len(H_poins) != len(B_poins):
                     print("La cantidad de puntos ingresados para x no coincide con la cantidad de puntos ingresados para y.")     
                     print("Porfavor vuelva a ingresar los valores")
-                    H_poins = []
-                    B_poins = [] 
+                    #H_poins = []
+                    #B_poins = [] 
                 else:
                     Curva_act = True # Bandera para saber si se ingreso una curva                 
                     Ver_graf = validar_decision("Desea ver el grafico segun los datos ingresados (S/N)? ")   
@@ -277,16 +275,17 @@ while Repetir:
         if Rel_I1 == True and Curva_act == True:
             # Calculando valores     
             B3 = Flujo_Deseado / (SC * F_ap)
-            H3 = f_curva(B3) # Se toma el valor correspondiente a la curva. 
-            L_fe = L3 - LE
+            #H3 = f_curva(B3) # Se toma el valor correspondiente a la curva.
+            H3 = np.interp(B3, H_poins, B_poins) 
+            L_fe = (L3 - LE)
             B_a = Flujo_Deseado / SC
             H_a = B_a / (4 * np.pi * 10 **(-7)) 
-            F_mmAB = H3 * L_fe + H_a * LE
+            F_mmAB = (H3 * L_fe + H_a * LE)
             
             # Se usa I1
-            H1 = (N1 * I1 - F_mmAB)/L1
-            B1 = f_curva(H1) # Se toma el valor correspondiente a la curva.
-            
+            H1 = ((N1 * I1) - F_mmAB)/L1
+            #B1 = f_curva(H1) # Se toma el valor correspondiente a la curva.
+            B1 = np.interp(H1, H_poins, B_poins)
             # Calculando flujo 1
             Flujo_1 = B1 * SL * F_ap        
             # Calculando flujo 2
@@ -294,20 +293,22 @@ while Repetir:
             
             # Calculando I2
             B2 = Flujo_2/(SL * F_ap)
-            H2 = f_curva(B2)
+            #H2 = f_curva(B2) # Se toma el valor correspondiente a la curva.
+            H2 = np.interp(B2, H_poins, B_poins)
             
-            I_2 = (H2 * L2 * F_mmAB)/N2 
+            I_2 = (H2 * L2 + F_mmAB)/N2 
             
             #Imprimiendo resultados.
             print(f"El valor del flujo por la columna 1 calculado es: {Flujo_1} Wb")
             print(f"El valor del flujo por la columna 2 calculado es: {Flujo_2} Wb")
             print(f"El valor de la corriente en la bobina 2 es: {I_2} A")
+            input("Presione Enter para continuar")
             
         elif Rel_I2 == True and Curva_act == True:
             print("Resolver para I2")
 
         else:
-            print("Primero se tienen que ingresar datos")
+            input("Primero se tienen que ingresar datos")
         
                     
     elif Opcion == 4:
