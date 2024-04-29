@@ -159,7 +159,7 @@ while Repetir:
                 N1 = leer_numero("Ingrese el valor de vueltas de la bobina 1: ", "Entero")
                 N2 = leer_numero("Ingrese el valor de vueltas de la bobina 2: ", "Entero")
                 I1 = leer_numero("Ingrese el valor de la corriente 1 (En Ampers): ", "Flotante")
-                Fa_laminas = leer_apilado("Ingrese el valor del factor de apilado de las lámina (entre 0 y 1): ", "Flotante")
+                F_ap = leer_apilado("Ingrese el valor del factor de apilado de las lámina (entre 0 y 1): ", "Flotante")
                 
                 SL = leer_numero("Ingrese el valor de SL(m^2): ", "Flotante")
                 SC = leer_numero("Ingrese el valor de SC(m^2): ", "Flotante")
@@ -187,7 +187,7 @@ while Repetir:
                 N1 = leer_numero("Ingrese el valor de vueltas de la bobina 1: ","Entero")
                 N2 = leer_numero("Ingrese el valor de vueltas de la bobina 2: ","Entero")
                 I2 = leer_numero("Ingrese el valor de la corriente 2 (En Ampers): ", "Flotante")  
-                Fa_laminas = leer_apilado("Ingrese el valor del factor de apilado de las lámina (entre 0 y 1): ", "Flotante")
+                F_ap = leer_apilado("Ingrese el valor del factor de apilado de las lámina (entre 0 y 1): ", "Flotante")
 
                 SL = leer_numero("Ingrese el valor de SL(m^2): ", "Flotante")
                 SC = leer_numero("Ingrese el valor de SC(m^2): ", "Flotante")
@@ -276,7 +276,7 @@ while Repetir:
              
         if Rel_I1 == True and Curva_act == True:
             # Calculando valores     
-            B3 = Flujo_Deseado / (SC * Fa_laminas)
+            B3 = Flujo_Deseado / (SC * F_ap)
             H3 = f_curva(B3) # Se toma el valor correspondiente a la curva. 
             L_fe = L3 - LE
             B_a = Flujo_Deseado / SC
@@ -284,7 +284,24 @@ while Repetir:
             F_mmAB = H3 * L_fe + H_a * LE
             
             # Se usa I1
+            H1 = (N1 * I1 - F_mmAB)/L1
+            B1 = f_curva(H1) # Se toma el valor correspondiente a la curva.
             
+            # Calculando flujo 1
+            Flujo_1 = B1 * SL * F_ap        
+            # Calculando flujo 2
+            Flujo_2 = Flujo_Deseado - Flujo_1
+            
+            # Calculando I2
+            B2 = Flujo_2/(SL * F_ap)
+            H2 = f_curva(B2)
+            
+            I_2 = (H2 * L2 * F_mmAB)/N2 
+            
+            #Imprimiendo resultados.
+            print(f"El valor del flujo por la columna 1 calculado es: {Flujo_1} Wb")
+            print(f"El valor del flujo por la columna 2 calculado es: {Flujo_2} Wb")
+            print(f"El valor de la corriente en la bobina 2 es: {I_2} A")
             
         elif Rel_I2 == True and Curva_act == True:
             print("Resolver para I2")
